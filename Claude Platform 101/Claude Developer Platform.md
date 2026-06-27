@@ -164,3 +164,197 @@ Similarly:
   - **Infrastructure** → Reliability and scalability
   - **Controls** → Monitoring and evaluation
 - Together, these layers enable developers to build, deploy, and manage production-ready AI applications.
+
+# Making Your First Claude API Call
+
+## Overview
+
+The first interaction with Claude follows a simple pattern using the `messages.create()` function.
+
+Every request contains:
+
+- Model
+- Maximum tokens
+- Messages
+- (Optional) System Prompt
+
+This is the foundation for all future Claude API interactions.
+
+---
+
+# Basic Flow
+
+```text
+Your Application
+        │
+        ▼
+messages.create()
+        │
+        ▼
+Claude Model
+        │
+        ▼
+Response
+        │
+        ▼
+Process Response Content
+```
+
+---
+
+# 1. messages.create()
+
+The `messages.create()` function is used to send a request to Claude.
+
+It typically requires:
+
+- **model** – Specifies which Claude model to use.
+- **max_tokens** – Defines the maximum number of tokens Claude can generate.
+- **messages** – The conversation history or user prompt.
+
+Example structure:
+
+```javascript
+client.messages.create({
+    model: "...",
+    max_tokens: ...,
+    messages: [...]
+});
+```
+
+---
+
+# 2. Store API Key Securely
+
+Never hardcode your API key inside your source code.
+
+Instead, store it inside a:
+
+```text
+.env.local
+```
+
+Example:
+
+```text
+ANTHROPIC_API_KEY=your_api_key_here
+```
+
+### Why?
+
+- Keeps secrets secure.
+- Prevents accidental uploads to GitHub.
+- Makes configuration easier across environments.
+
+---
+
+# 3. System Prompt
+
+A **System Prompt** defines Claude's behavior before the user sends any message.
+
+It tells Claude:
+
+- Who it is
+- How it should behave
+- What tone to use
+- Any rules it should follow
+
+Example:
+
+```text
+You are an expert Salesforce Developer.
+Always explain concepts using real-world examples.
+```
+
+Think of the System Prompt as giving Claude its role before the conversation begins.
+
+---
+
+# 4. Response Content
+
+Claude does not always return a single block of text.
+
+Instead, the response contains an array of **content blocks**.
+
+Example:
+
+```text
+Response
+│
+├── Text Block
+├── Tool Use Block
+├── Image Block
+└── ...
+```
+
+Your application should:
+
+1. Loop through each block.
+2. Check its type.
+3. Process it accordingly.
+
+Example logic:
+
+```text
+For each block
+      │
+      ▼
+Check Type
+      │
+      ├── text
+      ├── tool_use
+      ├── image
+      └── ...
+```
+
+---
+
+# Why This Matters
+
+Almost every Claude application follows this same workflow:
+
+```text
+Create Request
+        │
+        ▼
+Add Model
+        │
+        ▼
+Add System Prompt
+        │
+        ▼
+Send Messages
+        │
+        ▼
+Receive Response
+        │
+        ▼
+Process Content Blocks
+```
+
+As you learn more advanced features like Tool Use, MCP, or Agents, they all build upon this same request-response pattern.
+
+---
+
+# Quick Summary
+
+| Concept | Purpose |
+|----------|---------|
+| `messages.create()` | Sends a request to Claude |
+| `model` | Selects the Claude model |
+| `max_tokens` | Limits the response length |
+| `messages` | Contains the conversation or prompt |
+| `.env.local` | Securely stores the API key |
+| `system` | Defines Claude's behavior and instructions |
+| `content[]` | Array containing Claude's response blocks |
+
+---
+
+# Key Takeaways
+
+- Every Claude API request starts with `messages.create()`.
+- Always keep your API key in a `.env.local` file.
+- Use a **System Prompt** to define Claude's role and behavior.
+- The response is returned as an array of content blocks.
+- Loop through each content block and process it based on its type.
+- All advanced Claude features build upon this same API request pattern.
